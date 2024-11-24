@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:route_tracker_app/utils/location_service.dart';
 
 class GoogleMapView extends StatefulWidget {
   const GoogleMapView({super.key});
@@ -9,12 +10,13 @@ class GoogleMapView extends StatefulWidget {
 }
 
 class _GoogleMapViewState extends State<GoogleMapView> {
-
   late CameraPosition initialCameraPosition;
+  late LocationService locationService;
 
   @override
   void initState() {
     initialCameraPosition = const CameraPosition(target: LatLng(0, 0));
+    locationService = LocationService();
     super.initState();
   }
 
