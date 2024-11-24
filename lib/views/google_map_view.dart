@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:route_tracker_app/utils/location_service.dart';
+import 'package:route_tracker_app/widgets/custom_text_field.dart';
 
 class GoogleMapView extends StatefulWidget {
   const GoogleMapView({super.key});
@@ -24,14 +25,24 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      markers: markers,
-      onMapCreated: (controller) {
-        googleMapController = controller;
-        updateCurrentLocation();
-      },
-      zoomControlsEnabled: false,
-      initialCameraPosition: initialCameraPosition,
+    return Stack(
+      children: [
+        GoogleMap(
+          markers: markers,
+          onMapCreated: (controller) {
+            googleMapController = controller;
+            updateCurrentLocation();
+          },
+          zoomControlsEnabled: false,
+          initialCameraPosition: initialCameraPosition,
+        ),
+        Positioned(
+          top: 16,
+          left: 16,
+          right: 16,
+          child: CustomTextField(),
+        ),
+      ],
     );
   }
 
@@ -59,9 +70,9 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       );
     } on LocationServiceException catch (e) {
       // TODO
-    }on LocationPermissionException catch (e) {
+    } on LocationPermissionException catch (e) {
       // TODO
-    }on Exception catch (e) {
+    } on Exception catch (e) {
       // TODO
     }
   }
