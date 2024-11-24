@@ -41,6 +41,9 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           places.clear();
           places.addAll(result);
           setState(() {});
+        } else {
+          places.clear();
+          setState(() {});
         }
       },
     );
@@ -71,6 +74,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           right: 16,
           child: CustomTextField(textEditingController: textEditingController),
         ),
+        SizedBox(height: 16),
         CustomListView(places: places),
       ],
     );

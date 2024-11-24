@@ -8,14 +8,23 @@ class CustomListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return Text(places[index].description!);
-        },
-        separatorBuilder: (context, index) {
-          return Divider();
-        },
-        itemCount: places.length);
+    return Container(
+      color: Colors.white,
+      child: ListView.separated(
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: Icon(Icons.pin_drop),
+              title: Text(places[index].description!),
+              trailing: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.arrow_circle_right_outlined)),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const Divider(height: 0);
+          },
+          itemCount: places.length),
+    );
   }
 }
