@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({super.key});
+  const CustomTextField({super.key, required this.textEditingController});
+
+  final TextEditingController textEditingController;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: textEditingController,
       decoration: InputDecoration(
+        hintText: 'Search here',
         filled: true,
         fillColor: Colors.white,
         border: buildBorder(),
         enabledBorder: buildBorder(),
-        hintText: 'Search here',
+        focusedBorder: buildBorder(),
         contentPadding: EdgeInsets.symmetric(horizontal: 16),
       ),
     );
@@ -19,8 +23,8 @@ class CustomTextField extends StatelessWidget {
 
   OutlineInputBorder buildBorder() {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(16),
-      borderSide: BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.circular(24),
+      borderSide: const BorderSide(color: Colors.transparent),
     );
   }
 }
