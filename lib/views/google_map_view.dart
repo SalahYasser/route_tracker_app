@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
 import 'package:route_tracker_app/utils/google_maps_place_service.dart';
 import 'package:route_tracker_app/utils/location_service.dart';
+import 'package:route_tracker_app/widgets/custom_list_view.dart';
 import 'package:route_tracker_app/widgets/custom_text_field.dart';
 
 class GoogleMapView extends StatefulWidget {
@@ -18,6 +20,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late TextEditingController textEditingController;
   late GoogleMapsPlaceService googleMapsPlaceService;
   Set<Marker> markers = {};
+  List<PlaceAutocompleteModel> places = [];
 
   @override
   void initState() {
@@ -33,8 +36,11 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     textEditingController.addListener(() async {
         if (textEditingController.text.isNotEmpty) {
           var result = await googleMapsPlaceService.getPrediction(
-            input: textEditingController.text,
-          );
+              input: textEditingController.text);
+
+          places.clear();
+          places.addAll(result);
+          setState(() {});
         }
       },
     );
@@ -65,6 +71,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           right: 16,
           child: CustomTextField(textEditingController: textEditingController),
         ),
+        CustomListView(places: places),
       ],
     );
   }
@@ -100,3 +107,4 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     }
   }
 }
+
