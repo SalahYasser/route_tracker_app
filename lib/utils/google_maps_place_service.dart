@@ -8,16 +8,16 @@ class GoogleMapsPlaceService {
   final String baseUrl = 'https://maps.googleapis.com/maps/api/place';
   final String apiKey = 'AIzaSyC87Tt3tfO6aYids0BZStXXbrdAy05jQCI';
 
-  Future<List<PlaceAutocompleteModel>> getPrediction({required String input}) async {
+  Future<List<PlaceModel>> getPrediction({required String input}) async {
 
     var response = await http.get(Uri.parse('$baseUrl/autocomplete/json?key=$apiKey&input=$input'));
 
     if (response.statusCode == 200){
       var data = jsonDecode(response.body)['prediction'];
-      List<PlaceAutocompleteModel> places = [];
+      List<PlaceModel> places = [];
 
       for (var item in data) {
-        places.add(PlaceAutocompleteModel.fromJson(item));
+        places.add(PlaceModel.fromJson(item));
       }
       return places;
     } else {

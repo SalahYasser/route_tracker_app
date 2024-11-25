@@ -4,7 +4,7 @@ import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomp
 class CustomListView extends StatelessWidget {
   const CustomListView({super.key, required this.places});
 
-  final List<PlaceAutocompleteModel> places;
+  final List<PlaceModel> places;
 
   @override
   Widget build(BuildContext context) {

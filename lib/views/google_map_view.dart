@@ -20,7 +20,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late TextEditingController textEditingController;
   late GoogleMapsPlaceService googleMapsPlaceService;
   Set<Marker> markers = {};
-  List<PlaceAutocompleteModel> places = [];
+  List<PlaceModel> places = [];
 
   @override
   void initState() {
