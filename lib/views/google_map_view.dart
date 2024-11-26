@@ -19,9 +19,11 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late LocationService locationService;
   late GoogleMapController googleMapController;
   late TextEditingController textEditingController;
-  late GoogleMapsPlaceService googleMapsPlaceService;
+  late GoogleMapsPlacesService googleMapsPlaceService;
   late Uuid uuid;
+
   String? sessionToken;
+
   Set<Marker> markers = {};
   List<PlaceModel> places = [];
 
@@ -30,7 +32,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     initialCameraPosition = const CameraPosition(target: LatLng(0, 0));
     locationService = LocationService();
     textEditingController = TextEditingController();
-    googleMapsPlaceService = GoogleMapsPlaceService();
+    googleMapsPlaceService = GoogleMapsPlacesService();
     uuid = const Uuid();
     fetchPredictions();
     super.initState();
@@ -39,20 +41,19 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   void fetchPredictions() {
     textEditingController.addListener(() async {
       sessionToken ??= uuid.v4();
-        if (textEditingController.text.isNotEmpty) {
-          var result = await googleMapsPlaceService.getPrediction(
-            sessionToken: sessionToken!,
-              input: textEditingController.text);
 
-          places.clear();
-          places.addAll(result);
-          setState(() {});
-        } else {
-          places.clear();
-          setState(() {});
-        }
-      },
-    );
+      if (textEditingController.text.isNotEmpty) {
+        var result = await googleMapsPlaceService.getPredictions(
+            sessionToken: sessionToken!, input: textEditingController.text);
+
+        places.clear();
+        places.addAll(result);
+        setState(() {});
+      } else {
+        places.clear();
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -78,18 +79,25 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           top: 16,
           left: 16,
           right: 16,
-          child: CustomTextField(textEditingController: textEditingController),
-        ),
-        SizedBox(height: 16),
-        CustomListView(
-          onPlaceSelect: (placeDetailsModel) {
-            textEditingController.clear();
-            places.clear();
-            sessionToken = null;
-            setState(() {});
-          },
-          places: places,
-          googleMapsPlacesService: googleMapsPlaceService,
+          child: Column(
+            children: [
+              CustomTextField(
+                textEditingController: textEditingController,
+              ),
+              const SizedBox(height: 16),
+              CustomListView(
+                onPlaceSelect: (placeDetailsModel) {
+                  textEditingController.clear();
+                  places.clear();
+
+                  sessionToken = null;
+                  setState(() {});
+                },
+                places: places,
+                googleMapsPlacesService: googleMapsPlaceService,
+              )
+            ],
+          ),
         ),
       ],
     );
@@ -102,27 +110,26 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       LatLng currentPosition =
           LatLng(locationData.latitude!, locationData.longitude!);
 
-      var currentLocationMarker = Marker(
-        markerId: MarkerId('My Location'),
+      Marker currentLocationMarker = Marker(
+        markerId: const MarkerId('my location'),
         position: currentPosition,
       );
 
       CameraPosition myCurrentCameraPosition = CameraPosition(
         target: currentPosition,
-        zoom: 16,
+        zoom: 17,
       );
-      markers.add(currentLocationMarker);
 
-      setState(() {});
       googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(myCurrentCameraPosition),
-      );
-    } on LocationServiceException catch (e) {
-      // TODO
-    } on LocationPermissionException catch (e) {
-      // TODO
-    } on Exception catch (e) {
-      // TODO
+          CameraUpdate.newCameraPosition(myCurrentCameraPosition));
+      markers.add(currentLocationMarker);
+      setState(() {});
+    // } on LocationServiceException catch (e) {
+    //   // TODO:
+    // } on LocationPermissionException catch (e) {
+    //   // TODO :
+    } catch (e) {
+      // TODO:
     }
   }
 }

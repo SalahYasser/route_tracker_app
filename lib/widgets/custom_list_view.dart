@@ -14,7 +14,7 @@ class CustomListView extends StatelessWidget {
 
   final List<PlaceModel> places;
   final void Function(PlaceDetailsModel) onPlaceSelect;
-  final GoogleMapsPlaceService googleMapsPlacesService;
+  final GoogleMapsPlacesService googleMapsPlacesService;
   @override
   Widget build(BuildContext context) {
     return Container(
