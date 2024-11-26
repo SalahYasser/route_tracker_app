@@ -9,9 +9,9 @@ class GoogleMapsPlaceService {
   final String baseUrl = 'https://maps.googleapis.com/maps/api/place';
   final String apiKey = 'AIzaSyC87Tt3tfO6aYids0BZStXXbrdAy05jQCI';
 
-  Future<List<PlaceModel>> getPrediction({required String input}) async {
+  Future<List<PlaceModel>> getPrediction({required String input, required String sessionToken}) async {
 
-    var response = await http.get(Uri.parse('$baseUrl/autocomplete/json?key=$apiKey&input=$input'));
+    var response = await http.get(Uri.parse('$baseUrl/autocomplete/json?key=$apiKey&input=$input&sessiontoken=$sessionToken'));
 
     if (response.statusCode == 200){
       var data = jsonDecode(response.body)['prediction'];

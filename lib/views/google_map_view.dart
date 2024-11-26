@@ -5,6 +5,7 @@ import 'package:route_tracker_app/utils/google_maps_place_service.dart';
 import 'package:route_tracker_app/utils/location_service.dart';
 import 'package:route_tracker_app/widgets/custom_list_view.dart';
 import 'package:route_tracker_app/widgets/custom_text_field.dart';
+import 'package:uuid/uuid.dart';
 
 class GoogleMapView extends StatefulWidget {
   const GoogleMapView({super.key});
@@ -19,6 +20,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late GoogleMapController googleMapController;
   late TextEditingController textEditingController;
   late GoogleMapsPlaceService googleMapsPlaceService;
+  late Uuid uuid;
   Set<Marker> markers = {};
   List<PlaceModel> places = [];
 
@@ -28,14 +30,17 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     locationService = LocationService();
     textEditingController = TextEditingController();
     googleMapsPlaceService = GoogleMapsPlaceService();
+    uuid = const Uuid();
     fetchPredictions();
     super.initState();
   }
 
   void fetchPredictions() {
     textEditingController.addListener(() async {
+      var sessionToken = uuid.v4();
         if (textEditingController.text.isNotEmpty) {
           var result = await googleMapsPlaceService.getPrediction(
+            sessionToken: sessionToken,
               input: textEditingController.text);
 
           places.clear();
