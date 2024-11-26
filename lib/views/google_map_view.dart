@@ -124,10 +124,10 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           CameraUpdate.newCameraPosition(myCurrentCameraPosition));
       markers.add(currentLocationMarker);
       setState(() {});
-    // } on LocationServiceException catch (e) {
-    //   // TODO:
-    // } on LocationPermissionException catch (e) {
-    //   // TODO :
+      // } on LocationServiceException catch (e) {
+      //   // TODO:
+      // } on LocationPermissionException catch (e) {
+      //   // TODO :
     } catch (e) {
       // TODO:
     }

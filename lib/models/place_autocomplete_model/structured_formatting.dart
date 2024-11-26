@@ -15,18 +15,18 @@ class StructuredFormatting {
     return StructuredFormatting(
       mainText: json['main_text'] as String?,
       mainTextMatchedSubstrings:
-      (json['main_text_matched_substrings'] as List<dynamic>?)
-          ?.map((e) =>
-          MainTextMatchedSubstring.fromJson(e as Map<String, dynamic>))
-          .toList(),
+          (json['main_text_matched_substrings'] as List<dynamic>?)
+              ?.map((e) =>
+                  MainTextMatchedSubstring.fromJson(e as Map<String, dynamic>))
+              .toList(),
       secondaryText: json['secondary_text'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'main_text': mainText,
-    'main_text_matched_substrings':
-    mainTextMatchedSubstrings?.map((e) => e.toJson()).toList(),
-    'secondary_text': secondaryText,
-  };
+        'main_text': mainText,
+        'main_text_matched_substrings':
+            mainTextMatchedSubstrings?.map((e) => e.toJson()).toList(),
+        'secondary_text': secondaryText,
+      };
 }

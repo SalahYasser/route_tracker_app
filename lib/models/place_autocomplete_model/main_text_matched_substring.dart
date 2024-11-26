@@ -12,7 +12,7 @@ class MainTextMatchedSubstring {
   }
 
   Map<String, dynamic> toJson() => {
-    'length': length,
-    'offset': offset,
-  };
+        'length': length,
+        'offset': offset,
+      };
 }

@@ -64,21 +64,21 @@ class PlaceDetailsModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'address_components':
-    addressComponents?.map((e) => e.toJson()).toList(),
-    'adr_address': adrAddress,
-    'formatted_address': formattedAddress,
-    'geometry': geometry?.toJson(),
-    'icon': icon,
-    'icon_background_color': iconBackgroundColor,
-    'icon_mask_base_uri': iconMaskBaseUri,
-    'name': name,
-    'photos': photos?.map((e) => e.toJson()).toList(),
-    'place_id': placeId,
-    'reference': reference,
-    'types': types,
-    'url': url,
-    'utc_offset': utcOffset,
-    'vicinity': vicinity,
-  };
+        'address_components':
+            addressComponents?.map((e) => e.toJson()).toList(),
+        'adr_address': adrAddress,
+        'formatted_address': formattedAddress,
+        'geometry': geometry?.toJson(),
+        'icon': icon,
+        'icon_background_color': iconBackgroundColor,
+        'icon_mask_base_uri': iconMaskBaseUri,
+        'name': name,
+        'photos': photos?.map((e) => e.toJson()).toList(),
+        'place_id': placeId,
+        'reference': reference,
+        'types': types,
+        'url': url,
+        'utc_offset': utcOffset,
+        'vicinity': vicinity,
+      };
 }
