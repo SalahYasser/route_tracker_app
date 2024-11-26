@@ -75,7 +75,15 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           child: CustomTextField(textEditingController: textEditingController),
         ),
         SizedBox(height: 16),
-        CustomListView(places: places),
+        CustomListView(
+          onPlaceSelect: (placeDetailsModel) {
+            textEditingController.clear();
+            places.clear();
+            setState(() {});
+          },
+          places: places,
+          googleMapsPlacesService: googleMapsPlaceService,
+        ),
       ],
     );
   }
@@ -111,4 +119,3 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     }
   }
 }
-
