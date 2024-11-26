@@ -21,6 +21,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late TextEditingController textEditingController;
   late GoogleMapsPlaceService googleMapsPlaceService;
   late Uuid uuid;
+  String? sessionToken;
   Set<Marker> markers = {};
   List<PlaceModel> places = [];
 
@@ -37,10 +38,10 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   void fetchPredictions() {
     textEditingController.addListener(() async {
-      var sessionToken = uuid.v4();
+      sessionToken ??= uuid.v4();
         if (textEditingController.text.isNotEmpty) {
           var result = await googleMapsPlaceService.getPrediction(
-            sessionToken: sessionToken,
+            sessionToken: sessionToken!,
               input: textEditingController.text);
 
           places.clear();
@@ -84,6 +85,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           onPlaceSelect: (placeDetailsModel) {
             textEditingController.clear();
             places.clear();
+            sessionToken = null;
             setState(() {});
           },
           places: places,
