@@ -7,5 +7,12 @@ class RoutesService {
   final String apiKey = 'AIzaSyCQuBDXocPVuelRzdiVtcLnwUHo-mqA2gE';
 
   Future<RoutesModel> fetchRoutes() {
+    Uri url = Uri.parse(baseUrl);
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'X-Goog-Api-Key': apiKey,
+      'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline'
+    };
   }
 }
