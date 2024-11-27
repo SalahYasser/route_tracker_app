@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
 import 'package:route_tracker_app/utils/google_maps_place_service.dart';
 import 'package:route_tracker_app/utils/location_service.dart';
+import 'package:route_tracker_app/utils/routes_service.dart';
 import 'package:route_tracker_app/widgets/custom_list_view.dart';
 import 'package:route_tracker_app/widgets/custom_text_field.dart';
 import 'package:uuid/uuid.dart';
@@ -21,6 +22,9 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late TextEditingController textEditingController;
   late GoogleMapsPlacesService googleMapsPlaceService;
   late Uuid uuid;
+  late RoutesService routesService;
+  late LatLng currentLocation;
+  late LatLng destination;
 
   String? sessionToken;
 
@@ -34,6 +38,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     textEditingController = TextEditingController();
     googleMapsPlaceService = GoogleMapsPlacesService();
     uuid = const Uuid();
+    routesService = RoutesService();
+
     fetchPredictions();
     super.initState();
   }
@@ -92,6 +98,11 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
                   sessionToken = null;
                   setState(() {});
+
+                  destination = LatLng(
+                    placeDetailsModel.geometry!.location!.lat!,
+                    placeDetailsModel.geometry!.location!.lng!,
+                  );
                 },
                 places: places,
                 googleMapsPlacesService: googleMapsPlaceService,
@@ -107,16 +118,15 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     try {
       var locationData = await locationService.getLocation();
 
-      LatLng currentPosition =
-          LatLng(locationData.latitude!, locationData.longitude!);
+      currentLocation = LatLng(locationData.latitude!, locationData.longitude!);
 
       Marker currentLocationMarker = Marker(
         markerId: const MarkerId('my location'),
-        position: currentPosition,
+        position: currentLocation,
       );
 
       CameraPosition myCurrentCameraPosition = CameraPosition(
-        target: currentPosition,
+        target: currentLocation,
         zoom: 17,
       );
 
