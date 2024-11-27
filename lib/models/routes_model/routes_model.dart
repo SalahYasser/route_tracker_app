@@ -1,13 +1,13 @@
 import 'route.dart';
 
-class RoutesModel {
-  List<Route>? routes;
+class RoutesInfoModel {
+  List<RouteModel>? routes;
 
-  RoutesModel({this.routes});
+  RoutesInfoModel({this.routes});
 
-  factory RoutesModel.fromJson(Map<String, dynamic> json) => RoutesModel(
+  factory RoutesInfoModel.fromJson(Map<String, dynamic> json) => RoutesInfoModel(
         routes: (json['routes'] as List<dynamic>?)
-            ?.map((e) => Route.fromJson(e as Map<String, dynamic>))
+            ?.map((e) => RouteModel.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
 

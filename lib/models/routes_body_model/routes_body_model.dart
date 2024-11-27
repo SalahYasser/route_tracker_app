@@ -3,8 +3,8 @@ import 'origin.dart';
 import 'route_modifiers.dart';
 
 class RoutesBodyModel {
-  Origin? origin;
-  Destination? destination;
+  Origin origin;
+  Destination destination;
   String? travelMode;
   String? routingPreference;
   bool? computeAlternativeRoutes;
@@ -13,8 +13,8 @@ class RoutesBodyModel {
   String? units;
 
   RoutesBodyModel({
-    this.origin,
-    this.destination,
+    required this.origin,
+    required this.destination,
     this.travelMode,
     this.routingPreference,
     this.computeAlternativeRoutes,
@@ -25,12 +25,8 @@ class RoutesBodyModel {
 
   factory RoutesBodyModel.fromJson(Map<String, dynamic> json) {
     return RoutesBodyModel(
-      origin: json['origin'] == null
-          ? null
-          : Origin.fromJson(json['origin'] as Map<String, dynamic>),
-      destination: json['destination'] == null
-          ? null
-          : Destination.fromJson(json['destination'] as Map<String, dynamic>),
+      origin: Origin.fromJson(json['origin'] as Map<String, dynamic>),
+      destination: Destination.fromJson(json['destination'] as Map<String, dynamic>),
       travelMode: json['travelMode'] as String?,
       routingPreference: json['routingPreference'] as String?,
       computeAlternativeRoutes: json['computeAlternativeRoutes'] as bool?,
@@ -44,8 +40,8 @@ class RoutesBodyModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'origin': origin?.toJson(),
-        'destination': destination?.toJson(),
+        'origin': origin.toJson(),
+        'destination': destination.toJson(),
         'travelMode': travelMode,
         'routingPreference': routingPreference,
         'computeAlternativeRoutes': computeAlternativeRoutes,

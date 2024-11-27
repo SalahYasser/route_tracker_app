@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
+import 'package:route_tracker_app/models/routes_body_model/destination.dart';
+import 'package:route_tracker_app/models/routes_body_model/lat_lng.dart';
+import 'package:route_tracker_app/models/routes_body_model/location.dart';
+import 'package:route_tracker_app/models/routes_body_model/origin.dart';
+import 'package:route_tracker_app/models/routes_body_model/routes_body_model.dart';
+import 'package:route_tracker_app/models/routes_model/route.dart';
+import 'package:route_tracker_app/models/routes_model/routes_model.dart';
 import 'package:route_tracker_app/utils/google_maps_place_service.dart';
 import 'package:route_tracker_app/utils/location_service.dart';
 import 'package:route_tracker_app/utils/routes_service.dart';
@@ -24,7 +31,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late Uuid uuid;
   late RoutesService routesService;
   late LatLng currentLocation;
-  late LatLng destination;
+  late LatLng destinationLocation;
 
   String? sessionToken;
 
@@ -99,10 +106,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                   sessionToken = null;
                   setState(() {});
 
-                  destination = LatLng(
+                  destinationLocation = LatLng(
                     placeDetailsModel.geometry!.location!.lat!,
                     placeDetailsModel.geometry!.location!.lng!,
                   );
+
+                  getRouteData();
                 },
                 places: places,
                 googleMapsPlacesService: googleMapsPlaceService,
@@ -135,11 +144,38 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       markers.add(currentLocationMarker);
       setState(() {});
       // } on LocationServiceException catch (e) {
-      //   // TODO:
+      //   TODO:
       // } on LocationPermissionException catch (e) {
-      //   // TODO :
+      //   TODO:
     } catch (e) {
       // TODO:
     }
+  }
+
+  Future<RouteModel> getRouteData() async {
+
+    Origin origin = Origin(
+      location: LocationModel(
+        latLng: LatLngModel(
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude
+        ),
+      ),
+    );
+
+    Destination destination = Destination(
+      location: LocationModel(
+        latLng: LatLngModel(
+          latitude: destinationLocation.latitude,
+          longitude: destinationLocation.longitude
+        ),
+      ),
+    );
+
+    RoutesInfoModel routes = await routesService.fetchRoutes(
+      RoutesBodyModel(origin: origin, destination: destination),
+    );
+
+    return routes.routes!.first;
   }
 }

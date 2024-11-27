@@ -10,7 +10,7 @@ class RoutesService {
 
   final String apiKey = 'AIzaSyCQuBDXocPVuelRzdiVtcLnwUHo-mqA2gE';
 
-  Future<RoutesModel> fetchRoutes(RoutesBodyModel routesBodyModel) async {
+  Future<RoutesInfoModel> fetchRoutes(RoutesBodyModel routesBodyModel) async {
     Uri url = Uri.parse(baseUrl);
 
     Map<String, String> headers = {
@@ -34,7 +34,7 @@ class RoutesService {
     var response = await http.post(url, headers: headers, body: body);
     
     if(response.statusCode == 200) {
-      return RoutesModel.fromJson(jsonDecode(response.body));
+      return RoutesInfoModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('No Routes Found');
     }
