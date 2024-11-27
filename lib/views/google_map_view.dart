@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
 import 'package:route_tracker_app/models/routes_body_model/destination.dart';
@@ -152,23 +153,20 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     }
   }
 
-  Future<RouteModel> getRouteData() async {
-
+  Future<List<LatLng>> getRouteData() async {
     Origin origin = Origin(
       location: LocationModel(
         latLng: LatLngModel(
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude
-        ),
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude),
       ),
     );
 
     Destination destination = Destination(
       location: LocationModel(
         latLng: LatLngModel(
-          latitude: destinationLocation.latitude,
-          longitude: destinationLocation.longitude
-        ),
+            latitude: destinationLocation.latitude,
+            longitude: destinationLocation.longitude),
       ),
     );
 
@@ -176,6 +174,19 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       RoutesBodyModel(origin: origin, destination: destination),
     );
 
-    return routes.routes!.first;
+    List<LatLng> points = getDecodedRoute(routes);
+
+    return points;
+  }
+
+  List<LatLng> getDecodedRoute(RoutesInfoModel routes) {
+    PolylinePoints polylinePoints = PolylinePoints();
+
+    List<PointLatLng> result = polylinePoints.decodePolyline(
+      routes.routes!.first.polyline!.encodedPolyline!,
+    );
+
+    List<LatLng> points = result.map((e) => LatLng(e.latitude, e.longitude)).toList();
+    return points;
   }
 }
