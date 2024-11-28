@@ -28,19 +28,19 @@ class GoogleMapsPlacesService {
   }
 
   Future<PlaceDetailsModel> getPlaceDetails({required String placeId}) async {
-    var response = await http
-        .get(Uri.parse('$baseUrl/details/json?key=$apiKey&place_id=$placeId'));
+    var response = await http.get(Uri.parse('$baseUrl/details/json?key=$apiKey&place_id=$placeId'));
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body)['results'];
-      List<PlaceModel> places = [];
+      var jsonResponse = jsonDecode(response.body);
 
-      for (var item in data) {
-        places.add(PlaceModel.fromJson(item));
+      if (jsonResponse['result'] != null) {
+        var data = jsonResponse['result'];
+        return PlaceDetailsModel.fromJson(data);
+      } else {
+        throw Exception('No results found in the response');
       }
-      return PlaceDetailsModel.fromJson(data);
     } else {
-      throw Exception();
+      throw Exception('Failed to load data: ${response.statusCode}');
     }
   }
 }

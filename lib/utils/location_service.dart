@@ -4,7 +4,7 @@ class LocationService {
   Location location = Location();
 
   Future<void> checkAndRequestLocationService() async {
-    var isServiceEnabled = await location.requestService();
+    var isServiceEnabled = await location.serviceEnabled();
     if (!isServiceEnabled) {
       isServiceEnabled = await location.requestService();
       if (!isServiceEnabled) {
