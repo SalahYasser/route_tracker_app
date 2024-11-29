@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,7 +9,7 @@ import 'package:route_tracker_app/models/routes_body_model/location.dart';
 import 'package:route_tracker_app/models/routes_body_model/origin.dart';
 import 'package:route_tracker_app/models/routes_body_model/routes_body_model.dart';
 import 'package:route_tracker_app/models/routes_model/routes_model.dart';
-import 'package:route_tracker_app/utils/google_maps_place_service.dart';
+import 'package:route_tracker_app/utils/place_service.dart';
 import 'package:route_tracker_app/utils/location_service.dart';
 import 'package:route_tracker_app/utils/routes_service.dart';
 import 'package:route_tracker_app/widgets/custom_list_view.dart';
@@ -29,7 +28,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late LocationService locationService;
   late GoogleMapController googleMapController;
   late TextEditingController textEditingController;
-  late GoogleMapsPlacesService googleMapsPlaceService;
+  late PlacesService placeService;
   late Uuid uuid;
   late RoutesService routesService;
   late LatLng currentLocation;
@@ -46,7 +45,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     initialCameraPosition = const CameraPosition(target: LatLng(0, 0));
     locationService = LocationService();
     textEditingController = TextEditingController();
-    googleMapsPlaceService = GoogleMapsPlacesService();
+    placeService = PlacesService();
     uuid = const Uuid();
     routesService = RoutesService();
 
@@ -59,7 +58,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       sessionToken ??= uuid.v4();
 
       if (textEditingController.text.isNotEmpty) {
-        var result = await googleMapsPlaceService.getPredictions(
+        var result = await placeService.getPredictions(
             sessionToken: sessionToken!, input: textEditingController.text);
 
         places.clear();
@@ -119,7 +118,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                   displayRoute(points);
                 },
                 places: places,
-                googleMapsPlacesService: googleMapsPlaceService,
+                googleMapsPlacesService: placeService,
               )
             ],
           ),
@@ -205,7 +204,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
     LatLngBounds bounds = getLatLngBounds(points);
 
-    googleMapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 24));
+    googleMapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 32));
     setState(() {});
   }
 

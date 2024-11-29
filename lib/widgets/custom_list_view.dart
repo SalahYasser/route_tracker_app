@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
 import 'package:route_tracker_app/models/place_details_model/place_details_model.dart';
-import 'package:route_tracker_app/utils/google_maps_place_service.dart';
+import 'package:route_tracker_app/utils/place_service.dart';
 
 class CustomListView extends StatelessWidget {
   const CustomListView({
@@ -14,7 +14,7 @@ class CustomListView extends StatelessWidget {
 
   final List<PlaceModel> places;
   final void Function(PlaceDetailsModel) onPlaceSelect;
-  final GoogleMapsPlacesService googleMapsPlacesService;
+  final PlacesService googleMapsPlacesService;
   @override
   Widget build(BuildContext context) {
     return Container(
