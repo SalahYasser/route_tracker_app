@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
+import 'package:route_tracker_app/models/place_details_model/place_details_model.dart';
 import 'package:route_tracker_app/models/routes_body_model/destination.dart';
 import 'package:route_tracker_app/models/routes_body_model/lat_lng.dart';
 import 'package:route_tracker_app/models/routes_body_model/location.dart';
@@ -20,7 +21,7 @@ class MapServices {
 
   RoutesService routesService = RoutesService();
 
-  getPredictions(
+  Future<void> getPredictions(
       {required String input,
       required String sessionToken,
       required List<PlaceModel> places}) async {
@@ -34,7 +35,6 @@ class MapServices {
       places.clear();
     }
   }
-
 
   Future<List<LatLng>> getRouteData(
       {required LatLng currentLocation,
@@ -64,7 +64,6 @@ class MapServices {
     return points;
   }
 
-
   List<LatLng> getDecodedRoute(
       PolylinePoints polylinePoints, RoutesInfoModel routes) {
     List<PointLatLng> result = polylinePoints.decodePolyline(
@@ -75,7 +74,6 @@ class MapServices {
         result.map((e) => LatLng(e.latitude, e.longitude)).toList();
     return points;
   }
-
 
   void displayRoute(List<LatLng> points,
       {required Set<Polyline> polylines,
@@ -92,7 +90,6 @@ class MapServices {
 
     googleMapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 32));
   }
-
 
   LatLngBounds getLatLngBounds(List<LatLng> points) {
     var southwestLatitude = points.first.latitude;
@@ -111,7 +108,6 @@ class MapServices {
       northeast: LatLng(northeastLatitude, northeastLongitude),
     );
   }
-
 
   Future<LatLng> updateCurrentLocation(
       {required GoogleMapController googleMapController,
@@ -136,5 +132,9 @@ class MapServices {
     markers.add(currentLocationMarker);
 
     return currentLocation;
+  }
+
+  Future<PlaceDetailsModel> getPlaceDetails({required String placeId}) async {
+    return await placeService.getPlaceDetails(placeId: placeId);
   }
 }
