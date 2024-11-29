@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
@@ -22,6 +24,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late LatLng currentLocation;
   late LatLng destinationLocation;
 
+  Timer? debounce;
   String? sessionToken;
 
   Set<Marker> markers = {};
@@ -41,18 +44,25 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   void fetchPredictions() {
     textEditingController.addListener(() async {
-      sessionToken ??= uuid.v4();
-      await mapServices.getPredictions(
-          input: textEditingController.text,
-          sessionToken: sessionToken!,
-          places: places);
-      setState(() {});
+      if (debounce?.isActive ?? false) {
+        debounce?.cancel();
+      }
+
+      debounce = Timer(Duration(milliseconds: 100), () async {
+        sessionToken ??= uuid.v4();
+        await mapServices.getPredictions(
+            input: textEditingController.text,
+            sessionToken: sessionToken!,
+            places: places);
+        setState(() {});
+      });
     });
   }
 
   @override
   void dispose() {
     textEditingController.dispose();
+    debounce?.cancel();
     super.dispose();
   }
 
