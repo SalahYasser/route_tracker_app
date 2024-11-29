@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:route_tracker_app/models/routes_body_model/route_modifiers.dart';
 import 'package:route_tracker_app/models/routes_body_model/routes_body_model.dart';
 import 'package:route_tracker_app/models/routes_model/routes_model.dart';
 import 'package:http/http.dart' as http;
@@ -22,14 +20,12 @@ class RoutesService {
     };
 
     Map<String, dynamic> body = {
-      "origin": routesBodyModel.origin.toJson(),
-      "destination": routesBodyModel.destination.toJson(),
+      "origin": routesBodyModel.origin,
+      "destination": routesBodyModel.destination,
       "travelMode": routesBodyModel.travelMode,
       "routingPreference": routesBodyModel.routingPreference,
       "computeAlternativeRoutes": routesBodyModel.computeAlternativeRoutes,
-      "routeModifiers": routesBodyModel.routeModifiers != null
-          ? routesBodyModel.routeModifiers?.toJson()
-          : RouteModifiers().toJson(),
+      "routeModifiers": routesBodyModel.routeModifiers,
       "languageCode": routesBodyModel.languageCode,
       "units": routesBodyModel.units,
     };
