@@ -104,6 +104,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
                   var points = await mapServices.getRouteData(
                       destinationLocation: destinationLocation);
+
                   mapServices.displayRoute(points,
                       polylines: polylines,
                       googleMapController: googleMapController);
@@ -128,13 +129,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             setState(() {});
           });
 
-      setState(() {});
       // } on LocationServiceException catch (e) {
-      //   TODO:
-      // } on LocationPermissionException catch (e) {
-      //   TODO:
-    } catch (e) {
       // TODO:
+      // } on LocationPermissionException catch (e) {
+      // TODO:
+    } catch (e) {
+      throw Exception();
     }
   }
 }

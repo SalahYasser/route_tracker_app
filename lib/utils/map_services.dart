@@ -113,6 +113,7 @@ class MapServices {
   void updateCurrentLocation(
       {required GoogleMapController googleMapController,
       required Set<Marker> markers, required Function onUpdateCurrentLocation}) async {
+
     locationService.getRealTimeLocationData((locationData) {
       currentLocation = LatLng(locationData.latitude!, locationData.longitude!);
 
@@ -128,7 +129,9 @@ class MapServices {
 
       googleMapController.animateCamera(
           CameraUpdate.newCameraPosition(myCurrentCameraPosition));
+
       markers.add(currentLocationMarker);
+      onUpdateCurrentLocation();
     });
   }
 
