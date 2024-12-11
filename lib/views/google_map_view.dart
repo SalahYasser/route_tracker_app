@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
+import 'package:route_tracker_app/utils/location_service.dart';
 import 'package:route_tracker_app/utils/map_services.dart';
 import 'package:route_tracker_app/widgets/custom_list_view.dart';
 import 'package:route_tracker_app/widgets/custom_text_field.dart';
@@ -116,6 +117,31 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             ],
           ),
         ),
+        Positioned(
+          bottom: 32,
+          left: 16,
+          right: 16,
+          child: Container(
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+            child: IconButton(
+              onPressed: () {
+                updateZoomLevel();
+              },
+              icon: Text(
+                "zoom",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -123,16 +149,31 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   void updateCurrentLocation() {
     try {
       mapServices.updateCurrentLocation(
-          googleMapController: googleMapController,
-          markers: markers,
-          onUpdateCurrentLocation: () {
-            setState(() {});
-          });
+        googleMapController: googleMapController,
+        markers: markers,
+        onUpdateCurrentLocation: () {
+          setState(() {});
+        });
 
-      // } on LocationServiceException catch (e) {
+    } on LocationServiceException catch (e) {
       // TODO:
-      // } on LocationPermissionException catch (e) {
+    } on LocationPermissionException catch (e) {
       // TODO:
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  void updateZoomLevel() {
+    try {
+      mapServices.updateZoomLevel(
+        googleMapController: googleMapController,
+        markers: markers,
+        onUpdateCurrentLocation: () {
+          setState(() {});
+        },
+      );
+      setState(() {});
     } catch (e) {
       throw Exception();
     }

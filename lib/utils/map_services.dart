@@ -112,27 +112,50 @@ class MapServices {
 
   void updateCurrentLocation(
       {required GoogleMapController googleMapController,
-      required Set<Marker> markers, required Function onUpdateCurrentLocation}) async {
+      required Set<Marker> markers,
+      required Function onUpdateCurrentLocation}) async {
 
     locationService.getRealTimeLocationData((locationData) {
+
       currentLocation = LatLng(locationData.latitude!, locationData.longitude!);
 
-      Marker currentLocationMarker = Marker(
-        markerId: const MarkerId('my location'),
-        position: currentLocation!,
-      );
+        Marker currentLocationMarker = Marker(
+          markerId: const MarkerId('my location'),
+          position: currentLocation!,
+        );
 
-      CameraPosition myCurrentCameraPosition = CameraPosition(
-        target: currentLocation!,
-        zoom: 17,
-      );
+        markers.add(currentLocationMarker);
+        onUpdateCurrentLocation();
+      },
+    );
+  }
 
-      googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(myCurrentCameraPosition));
+  void updateZoomLevel(
+      {required GoogleMapController googleMapController,
+      required Set<Marker> markers,
+      required Function onUpdateCurrentLocation}) async {
 
-      markers.add(currentLocationMarker);
-      onUpdateCurrentLocation();
-    });
+    locationService.getRealTimeLocationData((locationData) {
+
+      currentLocation = LatLng(locationData.latitude!, locationData.longitude!);
+
+        Marker currentLocationMarker = Marker(
+          markerId: const MarkerId('my location'),
+          position: currentLocation!,
+        );
+
+        CameraPosition myCurrentCameraPosition = CameraPosition(
+          target: currentLocation!,
+          zoom: 15,
+        );
+
+        googleMapController.animateCamera(
+            CameraUpdate.newCameraPosition(myCurrentCameraPosition));
+
+        markers.add(currentLocationMarker);
+        onUpdateCurrentLocation();
+      },
+    );
   }
 
   Future<PlaceDetailsModel> getPlaceDetails({required String placeId}) async {
