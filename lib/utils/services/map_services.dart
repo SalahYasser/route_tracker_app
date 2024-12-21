@@ -10,9 +10,9 @@ import 'package:route_tracker_app/models/routes_body_model/location.dart';
 import 'package:route_tracker_app/models/routes_body_model/origin.dart';
 import 'package:route_tracker_app/models/routes_body_model/routes_body_model.dart';
 import 'package:route_tracker_app/models/routes_model/routes_model.dart';
-import 'package:route_tracker_app/utils/location_service.dart';
-import 'package:route_tracker_app/utils/place_service.dart';
-import 'package:route_tracker_app/utils/routes_service.dart';
+import 'package:route_tracker_app/utils/services/location_service.dart';
+import 'package:route_tracker_app/utils/services/place_service.dart';
+import 'package:route_tracker_app/utils/services/routes_service.dart';
 
 class MapServices {
   PlacesService placeService = PlacesService();
