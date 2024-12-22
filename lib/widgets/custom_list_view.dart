@@ -23,6 +23,7 @@ class CustomListView extends StatelessWidget {
       child: ListView.separated(
         shrinkWrap: true,
         itemBuilder: (context, index) {
+
           return ListTile(
             title: Text(places[index].description!),
             leading: const Icon(FontAwesomeIcons.mapPin),

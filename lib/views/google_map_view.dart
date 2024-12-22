@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:route_tracker_app/models/place_autocomplete_model/place_autocomplete_model.dart';
+import 'package:route_tracker_app/models/routes_model/routes_model.dart';
 import 'package:route_tracker_app/utils/services/location_service.dart';
 import 'package:route_tracker_app/utils/services/map_services.dart';
 import 'package:route_tracker_app/widgets/custom_list_view.dart';
 import 'package:route_tracker_app/widgets/custom_text_field.dart';
+import 'package:route_tracker_app/widgets/floating_action_button.dart';
+import 'package:route_tracker_app/widgets/route_details_info.dart';
 import 'package:uuid/uuid.dart';
 
 class GoogleMapView extends StatefulWidget {
@@ -23,6 +26,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late Uuid uuid;
   late MapServices mapServices;
   late LatLng destinationLocation;
+  late RoutesInfoModel routesInfoModel;
 
   Timer? debounce;
   String? sessionToken;
@@ -37,6 +41,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     textEditingController = TextEditingController();
     uuid = const Uuid();
     mapServices = MapServices();
+    routesInfoModel = RoutesInfoModel();
 
     fetchPredictions();
     super.initState();
@@ -96,6 +101,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                   const SizedBox(height: 16),
                   CustomListView(
                     onPlaceSelect: (placeDetailsModel) async {
+                      FocusManager.instance.primaryFocus?.unfocus();
                       textEditingController.clear();
                       places.clear();
 
@@ -108,7 +114,9 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                       );
 
                       var points = await mapServices.getRouteData(
-                          destinationLocation: destinationLocation);
+                          destinationLocation: destinationLocation,
+                          routes: routesInfoModel.routes!
+                      );
 
                       mapServices.displayRoute(points,
                           polylines: polylines,
@@ -121,35 +129,32 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                 ],
               ),
             ),
-
-            Positioned(
-              bottom: 32,
-              left: 16,
-              right: 16,
-              child: Container(
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    updateZoomLevel();
-                  },
-                  icon: Text(
-                    "zoom",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
+      bottomSheet: routesInfoModel.routes == null
+          ? null
+          : RouteDetailsInfoWidget(
+        duration: routesInfoModel.routes!.first.duration!,
+        distanceMeters: routesInfoModel.routes!.first.distanceMeters!,
+        cancelRouteFun: () {
+          polylines = {};
+          routesInfoModel.routes = null;
+          setState(() {});
+          updateCurrentLocation();
+        },
+        startRouteFun: () {
+          updateCurrentLocation();
+          setState(() {});
+        },
+      ),
+      floatingActionButton: routesInfoModel.routes == null
+          ? FloatingActionButtonWidget(
+        getCurrentLocationFun: () {
+          updateCurrentLocation();
+        },
+      )
+          : null,
     );
   }
 
@@ -166,21 +171,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       // TODO:
     } on LocationPermissionException catch (e) {
       // TODO:
-    } catch (e) {
-      throw Exception();
-    }
-  }
-
-  void updateZoomLevel() {
-    try {
-      mapServices.updateZoomLevel(
-        googleMapController: googleMapController,
-        markers: markers,
-        onUpdateCurrentLocation: () {
-          setState(() {});
-        },
-      );
-      setState(() {});
     } catch (e) {
       throw Exception();
     }
