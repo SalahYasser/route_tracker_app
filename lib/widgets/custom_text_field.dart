@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({super.key, required this.textEditingController});
+  const CustomTextField({
+    super.key,
+    required this.textEditingController,
+    required this.onPlaceSelect,
+  });
 
   final TextEditingController textEditingController;
+  final void Function() onPlaceSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +22,12 @@ class CustomTextField extends StatelessWidget {
         enabledBorder: buildBorder(),
         focusedBorder: buildBorder(),
         contentPadding: EdgeInsets.symmetric(horizontal: 16),
+        suffixIcon: textEditingController.text.isEmpty
+            ? null
+            : IconButton(
+                onPressed: onPlaceSelect,
+                icon: const Icon(Icons.clear),
+              ),
       ),
     );
   }

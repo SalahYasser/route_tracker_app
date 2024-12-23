@@ -97,16 +97,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                 children: [
                   CustomTextField(
                     textEditingController: textEditingController,
+                    onPlaceSelect: onPlaceSelect,
                   ),
                   const SizedBox(height: 16),
                   CustomListView(
                     onPlaceSelect: (placeDetailsModel) async {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      textEditingController.clear();
-                      places.clear();
-
-                      sessionToken = null;
-                      setState(() {});
+                      onPlaceSelect();
 
                       destinationLocation = LatLng(
                         placeDetailsModel.geometry!.location!.lat!,
@@ -134,7 +130,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       ),
       bottomSheet: routesInfoModel.routes == null
           ? null
-          : RouteDetailsInfoWidget(
+          : RouteDetailsInfo(
         duration: routesInfoModel.routes!.first.duration!,
         distanceMeters: routesInfoModel.routes!.first.distanceMeters!,
         cancelRouteFun: () {
@@ -156,6 +152,14 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       )
           : null,
     );
+  }
+
+  void onPlaceSelect() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    textEditingController.clear();
+    places.clear();
+    sessionToken = null;
+    setState(() {});
   }
 
   void updateCurrentLocation() {

@@ -15,8 +15,155 @@ import 'package:route_tracker_app/utils/services/location_service.dart';
 import 'package:route_tracker_app/utils/services/place_service.dart';
 import 'package:route_tracker_app/utils/services/routes_service.dart';
 
+// class MapServices {
+//   PlacesService placeService = PlacesService();
+//
+//   LocationService locationService = LocationService();
+//
+//   RoutesService routesService = RoutesService();
+//
+//   LatLng? currentLocation;
+//
+//   Future<void> getPredictions(
+//       {required String input,
+//       required String sessionToken,
+//       required List<PlaceModel> places}) async {
+//     if (input.isNotEmpty) {
+//       var result = await placeService.getPredictions(
+//           sessionToken: sessionToken, input: input);
+//
+//       places.clear();
+//       places.addAll(result);
+//     } else {
+//       places.clear();
+//     }
+//   }
+//
+//   Future<RoutesInfoModel> geRouteDataInfo(
+//       {required LatLng destinationLocation}) async {
+//
+//     Origin origin = Origin(
+//       location: LocationModel(
+//           latLng: LatLngModel(
+//         latitude: currentLocation!.latitude,
+//         longitude: currentLocation!.longitude,
+//       )),
+//     );
+//     Destination destination = Destination(
+//       location: LocationModel(
+//         latLng: LatLngModel(
+//             latitude: destinationLocation.latitude,
+//             longitude: destinationLocation.longitude),
+//       ),
+//     );
+//     RoutesInfoModel routes = await routesService
+//         .fetchRoutes(RoutesBodyModel(origin: origin, destination: destination));
+//     return routes;
+//   }
+//
+//   Future<List<LatLng>> getRouteData(
+//       {required LatLng destinationLocation, required List<RouteModel> routes }) async {
+//
+//     PolylinePoints polylinePoints = PolylinePoints();
+//     List<LatLng> points = getDecodedRoute(polylinePoints, routes);
+//     return points;
+//   }
+//
+//   List<LatLng> getDecodedRoute(PolylinePoints polylinePoints, List<RouteModel> routes) {
+//     List<PointLatLng> result = polylinePoints.decodePolyline(
+//       routes.first.polyline!.encodedPolyline!,
+//     );
+//
+//     List<LatLng> points = result.map((e) => LatLng(e.latitude, e.longitude)).toList();
+//     return points;
+//   }
+//
+//   void displayRoute(List<LatLng> points,
+//       {required Set<Polyline> polylines,
+//       required GoogleMapController googleMapController}) {
+//
+//     Polyline route = Polyline(
+//       color: Colors.blue,
+//       width: 5,
+//       polylineId: PolylineId('route'),
+//       points: points,
+//     );
+//     polylines.add(route);
+//
+//     LatLngBounds bounds = getLatLngBounds(points);
+//
+//     googleMapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 32));
+//   }
+//
+//   LatLngBounds getLatLngBounds(List<LatLng> points) {
+//     var southwestLatitude = points.first.latitude;
+//     var southwestLongitude = points.first.longitude;
+//     var northeastLatitude = points.first.latitude;
+//     var northeastLongitude = points.first.longitude;
+//
+//     for (var point in points) {
+//       southwestLatitude = min(southwestLatitude, point.latitude);
+//       southwestLongitude = min(southwestLongitude, point.longitude);
+//       northeastLatitude = max(northeastLatitude, point.latitude);
+//       northeastLongitude = max(northeastLongitude, point.longitude);
+//     }
+//     return LatLngBounds(
+//       southwest: LatLng(southwestLatitude, southwestLongitude),
+//       northeast: LatLng(northeastLatitude, northeastLongitude),
+//     );
+//   }
+//
+//   void updateCurrentLocation(
+//       {required GoogleMapController googleMapController,
+//       required Set<Marker> markers,
+//       required Function onUpdateCurrentLocation}) async {
+//
+//     var location = await locationService.getLocation();
+//     currentLocation = LatLng(location.latitude!, location.longitude!);
+//
+//     Marker currentLocationMarker = Marker(
+//       markerId: const MarkerId('my location'),
+//       position: currentLocation!,
+//     );
+//
+//     CameraPosition myCurrentCameraPosition = CameraPosition(
+//       target: currentLocation!,
+//       zoom: 20,
+//     );
+//
+//     googleMapController
+//         .animateCamera(CameraUpdate.newCameraPosition(myCurrentCameraPosition));
+//
+//     markers.add(currentLocationMarker);
+//     onUpdateCurrentLocation();
+//   }
+//
+//   void updateRealTimeCurrentLocation(
+//       {required GoogleMapController googleMapController,
+//       required Function onUpdateCurrentLocation}) {
+//
+//     locationService.getRealTimeLocationData((locationData) {
+//       currentLocation = LatLng(locationData.latitude!, locationData.longitude!);
+//
+//       CameraPosition myCurrentCameraPosition = CameraPosition(
+//         target: currentLocation!,
+//         zoom: 20,
+//       );
+//
+//       googleMapController.animateCamera(
+//           CameraUpdate.newCameraPosition(myCurrentCameraPosition));
+//       onUpdateCurrentLocation();
+//     });
+//   }
+//
+//   Future<PlaceDetailsModel> getPlaceDetails({required String placeId}) async {
+//     return await placeService.getPlaceDetails(placeId: placeId);
+//   }
+// }
+
+
 class MapServices {
-  PlacesService placeService = PlacesService();
+  PlacesService placesService = PlacesService();
 
   LocationService locationService = LocationService();
 
@@ -29,7 +176,7 @@ class MapServices {
       required String sessionToken,
       required List<PlaceModel> places}) async {
     if (input.isNotEmpty) {
-      var result = await placeService.getPredictions(
+      var result = await placesService.getPredictions(
           sessionToken: sessionToken, input: input);
 
       places.clear();
@@ -39,9 +186,9 @@ class MapServices {
     }
   }
 
-  Future<RoutesInfoModel> geRouteDataInfo(
-      {required LatLng destinationLocation}) async {
-
+  Future<RoutesInfoModel> geRouteDataInfo({
+    required LatLng desintation,
+  }) async {
     Origin origin = Origin(
       location: LocationModel(
           latLng: LatLngModel(
@@ -51,13 +198,14 @@ class MapServices {
     );
     Destination destination = Destination(
       location: LocationModel(
-        latLng: LatLngModel(
-            latitude: destinationLocation.latitude,
-            longitude: destinationLocation.longitude),
-      ),
+          latLng: LatLngModel(
+        latitude: desintation.latitude,
+        longitude: desintation.longitude,
+      )),
     );
-    RoutesInfoModel routes = await routesService
-        .fetchRoutes(RoutesBodyModel(origin: origin, destination: destination));
+    RoutesInfoModel routes = await routesService.fetchRoutes(
+      RoutesBodyModel(origin: origin, destination: destination),
+    );
     return routes;
   }
 
@@ -69,7 +217,10 @@ class MapServices {
     return points;
   }
 
-  List<LatLng> getDecodedRoute(PolylinePoints polylinePoints, List<RouteModel> routes) {
+  List<LatLng> getDecodedRoute(
+    PolylinePoints polylinePoints,
+    List<RouteModel> routes,
+  ) {
     List<PointLatLng> result = polylinePoints.decodePolyline(
       routes.first.polyline!.encodedPolyline!,
     );
@@ -82,34 +233,34 @@ class MapServices {
       {required Set<Polyline> polylines,
       required GoogleMapController googleMapController}) {
     Polyline route = Polyline(
-      color: Colors.blue,
+      color: Colors.green,
       width: 5,
-      polylineId: PolylineId('route'),
+      polylineId: const PolylineId('route'),
       points: points,
     );
+
     polylines.add(route);
 
     LatLngBounds bounds = getLatLngBounds(points);
-
     googleMapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 32));
   }
 
   LatLngBounds getLatLngBounds(List<LatLng> points) {
-    var southwestLatitude = points.first.latitude;
-    var southwestLongitude = points.first.longitude;
-    var northeastLatitude = points.first.latitude;
-    var northeastLongitude = points.first.longitude;
+    var southWestLatitude = points.first.latitude;
+    var southWestLongitude = points.first.longitude;
+    var northEastLatitude = points.first.latitude;
+    var northEastLongitude = points.first.longitude;
 
     for (var point in points) {
-      southwestLatitude = min(southwestLatitude, point.latitude);
-      southwestLongitude = min(southwestLongitude, point.longitude);
-      northeastLatitude = max(northeastLatitude, point.latitude);
-      northeastLongitude = max(northeastLongitude, point.longitude);
+      southWestLatitude = min(southWestLatitude, point.latitude);
+      southWestLongitude = min(southWestLongitude, point.longitude);
+      northEastLatitude = max(northEastLatitude, point.latitude);
+      northEastLongitude = max(northEastLongitude, point.longitude);
     }
+
     return LatLngBounds(
-      southwest: LatLng(southwestLatitude, southwestLongitude),
-      northeast: LatLng(northeastLatitude, northeastLongitude),
-    );
+        southwest: LatLng(southWestLatitude, southWestLongitude),
+        northeast: LatLng(northEastLatitude, northEastLongitude));
   }
 
   void updateCurrentLocation(
@@ -156,6 +307,6 @@ class MapServices {
   }
 
   Future<PlaceDetailsModel> getPlaceDetails({required String placeId}) async {
-    return await placeService.getPlaceDetails(placeId: placeId);
+    return await placesService.getPlaceDetails(placeId: placeId);
   }
 }

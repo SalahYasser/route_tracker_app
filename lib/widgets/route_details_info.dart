@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:route_tracker_app/utils/functions/calculate_future_time.dart';
 import 'package:route_tracker_app/utils/functions/int_to_time_left.dart';
 
-class RouteDetailsInfoWidget extends StatelessWidget {
-  const RouteDetailsInfoWidget({
+class RouteDetailsInfo extends StatelessWidget {
+  const RouteDetailsInfo({
     super.key,
     required this.distanceMeters,
     required this.duration,
