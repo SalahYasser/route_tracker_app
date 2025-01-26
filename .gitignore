@@ -45,3 +45,5 @@ app.*.map.json
 .env
 lib/api_Keys.dart
 lib/test.json
+/Users/salahyasserallaithy/Projects/Route Tracker App/route_tracker_app/ios/Runner/AppDelegate.swift
+/Users/salahyasserallaithy/Projects/Route Tracker App/route_tracker_app/android/app/src/main/AndroidManifest.xml
