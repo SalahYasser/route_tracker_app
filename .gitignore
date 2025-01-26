@@ -44,3 +44,4 @@ app.*.map.json
 
 .env
 lib/api_Keys.dart
+lib/test.json
