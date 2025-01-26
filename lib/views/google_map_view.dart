@@ -81,7 +81,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             GoogleMap(
               polylines: polylines,
               markers: markers,
-              onMapCreated: (controller) {
+              onMapCreated: (GoogleMapController controller) {
                 googleMapController = controller;
                 updateCurrentLocation();
               },
@@ -109,10 +109,13 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                         placeDetailsModel.geometry!.location!.lng!,
                       );
 
+                      routesInfoModel = await mapServices.geRouteDataInfo(
+                        destinationLocation: destinationLocation,
+                      );
+
                       var points = await mapServices.getRouteData(
                           destinationLocation: destinationLocation,
-                          routes: routesInfoModel.routes!
-                      );
+                          routes: routesInfoModel.routes!);
 
                       mapServices.displayRoute(points,
                           polylines: polylines,
@@ -131,25 +134,25 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       bottomSheet: routesInfoModel.routes == null
           ? null
           : RouteDetailsInfo(
-        duration: routesInfoModel.routes!.first.duration!,
-        distanceMeters: routesInfoModel.routes!.first.distanceMeters!,
-        cancelRouteFun: () {
-          polylines = {};
-          routesInfoModel.routes = null;
-          setState(() {});
-          updateCurrentLocation();
-        },
-        startRouteFun: () {
-          updateCurrentLocation();
-          setState(() {});
-        },
-      ),
+              duration: routesInfoModel.routes!.first.duration!,
+              distanceMeters: routesInfoModel.routes!.first.distanceMeters!,
+              cancelRouteFun: () {
+                polylines = {};
+                routesInfoModel.routes = null;
+                setState(() {});
+                updateCurrentLocation();
+              },
+              startRouteFun: () {
+                updateCurrentLocation();
+                setState(() {});
+              },
+            ),
       floatingActionButton: routesInfoModel.routes == null
           ? FloatingActionButtonWidget(
-        getCurrentLocationFun: () {
-          updateCurrentLocation();
-        },
-      )
+              getCurrentLocationFun: () {
+                updateCurrentLocation();
+              },
+            )
           : null,
     );
   }
@@ -165,12 +168,11 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   void updateCurrentLocation() {
     try {
       mapServices.updateCurrentLocation(
-        googleMapController: googleMapController,
-        markers: markers,
-        onUpdateCurrentLocation: () {
-          setState(() {});
-        });
-
+          googleMapController: googleMapController,
+          markers: markers,
+          onUpdateCurrentLocation: () {
+            setState(() {});
+          });
     } on LocationServiceException catch (e) {
       // TODO:
     } on LocationPermissionException catch (e) {
