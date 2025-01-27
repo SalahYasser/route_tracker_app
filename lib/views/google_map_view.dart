@@ -86,6 +86,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                 updateCurrentLocation();
               },
               zoomControlsEnabled: false,
+              myLocationButtonEnabled: false,
               mapType: MapType.hybrid,
               initialCameraPosition: initialCameraPosition,
             ),
